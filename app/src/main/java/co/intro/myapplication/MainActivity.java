@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -17,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView puntaje;
     private EditText respuesta;
     private Button responder;
+    private Button intentar;
     private TextView time;
     private ArrayList<Pregunta> listaPreguntas;
     private int indice;
@@ -54,7 +56,10 @@ public class MainActivity extends AppCompatActivity {
         puntaje=findViewById(R.id.puntaje);
         respuesta=findViewById(R.id.respuesta);
         responder=findViewById(R.id.responder);
+        intentar=findViewById(R.id.intentar);
         time=findViewById(R.id.time);
+        //ocultar boton INTENTAR DE NUEVO
+        intentar.setVisibility(View.GONE);
         timer();
         operacion.setText(listaPreguntas.get(indice).getPregunta());
         //Toast.makeText(this,listaPreguntas.get(indice).getPregunta(),Toast.LENGTH_LONG).show();
@@ -67,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
                // Toast.makeText(this,respuesta.getText()+ " "+ listaPreguntas.get(indice).getRespuesta(),Toast.LENGTH_LONG).show();
                 if(String.valueOf(respuesta.getText()).equals(listaPreguntas.get(indice).getRespuesta())){
                 contador++;
-                puntaje.setText("puntaje: "+contador);
+                puntaje.setText("Puntaje: "+contador);
                //Toast.makeText(this,"HOLA",Toast.LENGTH_LONG).show();
                 }
                 respuesta.setText("");
@@ -79,12 +84,19 @@ public class MainActivity extends AppCompatActivity {
 
             }//cierra
 
-
     );
 
+        intentar.setOnClickListener(
+                (v)->{
+                    contador=0;
+                    puntaje.setText("Puntaje: " + contador);
+                    timer();
+                    intentar.setVisibility(View.GONE);
+                }//cierra
 
+        );
 
-        }
+        }//oncreate
 
         public void timer(){
 
@@ -106,6 +118,10 @@ public class MainActivity extends AppCompatActivity {
                         tiempo--;
                     }
 
+                    runOnUiThread(
+                            ()-> {
+                                intentar.setVisibility(View.VISIBLE);
+                            });
                 }
 
             ).start();
